@@ -9,6 +9,7 @@ td{
   
 } 
 
-table{
-
+.ventana{
+    height: 100px;
+    width:  100px;
 }
