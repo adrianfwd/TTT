@@ -1,3 +1,18 @@
+section{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    left: 0%;
+    right: 0%;
+    height: 500px;
+    background-color: rgba(137, 43, 226, 0);
+}
+table{
+    background-color: brown;
+}
+
+
+
 td{
     border: 2px solid #444;
     height: 100px;
@@ -10,6 +25,8 @@ td{
 } 
 
 .ventana{
-    height: 100px;
-    width:  100px;
+    background-color: aqua;
+    left: 0%;
+    right: 0%;
+    height: 500px;
 }

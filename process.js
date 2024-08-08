@@ -4,6 +4,11 @@ const cpu = "X";
 let scoreJug = 0;
 let scoreCpu = 0;
 let empate = 0;
+let scores = {
+   scoreCpu: 0,
+   scoreJug: 0,
+   empate :0
+}
 const lineas = [
     [0, 1, 2],
     [3, 4, 5],
@@ -14,7 +19,6 @@ const lineas = [
     [0, 4, 8],
     [6, 4, 2]
 ];
-//tengo que crear un objeto para guardar los datos de scores y guardarlo en local y actualizarlo cada ves que se haga una de las funciones de ganar y etc
 const celdas = document.querySelectorAll(".celdas");
 empezarLaVara();
 
@@ -31,6 +35,9 @@ function empezarLaVara() {
         celdas[j].style.backgroundColor = "";
         celdas[j].addEventListener("click", turnoClick);
     }
+
+    document.querySelector(".ventana .text").innerText = "";
+   
 }
 
 function turnoClick(cuadro) {
@@ -88,10 +95,10 @@ function derrota(victoria) {
     }
 
     if (victoria.jugador == jugadorUno) {
-        scoreJug++;
+        scores.scoreJug++;
         console.log("Jugador: " + scoreJug);
     } else {
-        scoreCpu++;
+        scores.scoreCpu++;
         console.log("CPU: " + scoreCpu);
     }
 
@@ -100,6 +107,7 @@ function derrota(victoria) {
     }
 
     // Mostrar el resultado esto es solo para debuggear tengo que hacer una ventana que imprima estos datos jeje
+    guardarScore();
     declararGanador(victoria.jugador == jugadorUno ? "ganaste" : "te verguearon que pato");
 }
 
@@ -108,6 +116,7 @@ function declararGanador(mensaje) {
     document.querySelector(".ventana .text").innerText = mensaje;
 }
 
+ var rango = 0;
 function espacioVacio() {
     var espacios = [];
     for (var i = 0; i < tablero.length; i++) {
@@ -117,27 +126,40 @@ function espacioVacio() {
 
         }
     }
-    console.log(espacios.length);//estoy debugueando los espacios preguntarle a nicol porque agrega un espacio de mas(prioridad)
+    var rango = (espacios.length) - 1;
+    console.log(rango);//estoy debugueando los espacios preguntarle a nicol porque agrega un espacio de mas(prioridad)
     return espacios;
+    
 }
 
 function mejorCuadro() {
     var vacios = espacioVacio();
-    return vacios[0];
+    return vacios[getRandomInt(rango)];
     // cambiar este metodo a un random o minimax si sobra tiempo
 }
 
-function revisarEmpate() {
+function revisarEmpate(){
+    
     if (espacioVacio().length == 0) {
         for (var i = 0; i < celdas.length; i++) {
             celdas[i].style.backgroundColor = "green";
             celdas[i].removeEventListener("click", turnoClick);
         }
         declararGanador("Empate");
-        empate++
+        scores.empate++
         console.log("empate: " + empate);
+        guardarScore();
         return true;
         
     }
     return false;
 }
+
+function guardarScore(){
+
+    localStorage.setItem("scores", JSON.stringify(scores));
+}
+
+function getRandomInt(rango) {
+    return Math.floor(Math.random() * rango);
+  }
