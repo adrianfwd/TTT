@@ -1,8 +1,9 @@
-var tablero;
-const jugadorUno = "O"
-const cpu = "X"
+let tablero;
+const jugadorUno = "O";
+const cpu = "X";
 let scoreJug = 0;
 let scoreCpu = 0;
+let empate = 0;
 const lineas = [
     [0, 1, 2],
     [3, 4, 5],
@@ -11,54 +12,54 @@ const lineas = [
     [1, 4, 7],
     [2, 5, 8],
     [0, 4, 8],
-    [6, 4, 2],
-]
-
+    [6, 4, 2]
+];
+//tengo que crear un objeto para guardar los datos de scores y guardarlo en local y actualizarlo cada ves que se haga una de las funciones de ganar y etc
 const celdas = document.querySelectorAll(".celdas");
-startGame()
+empezarLaVara();
 
-function startGame() {
-    tablero = Array.from(Array(9).keys());
-    //console.log(tablero);
-    for (var i = 0; i < celdas.length; i++) {
-        celdas[i].innerText = "";
-        celdas[i].style.removeProperty("background-color");
-        celdas[i].addEventListener("click", turnoClick, false)
+function empezarLaVara() {
+
+    tablero = [];
+    for (var i = 0; i < 9; i++) {
+        tablero[i] = i;
     }
 
+
+    for (var j = 0; j < celdas.length; j++) {
+        celdas[j].innerText = "";
+        celdas[j].style.backgroundColor = "";
+        celdas[j].addEventListener("click", turnoClick);
+    }
 }
 
 function turnoClick(cuadro) {
     if (typeof tablero[cuadro.target.id] == "number") {
-        turno(cuadro.target.id, jugadorUno)
-        if (!revisarEmpate()) turno(mejorCuadro(), cpu)
+        turno(cuadro.target.id, jugadorUno);
+        if (!revisarEmpate() && !checkWin(tablero, jugadorUno)) turno(mejorCuadro(), cpu);
     }
 }
 
 function turno(cuadroId, jugador) {
     tablero[cuadroId] = jugador;
     document.getElementById(cuadroId).innerText = jugador;
-    let victoria = checkWin(tablero, jugador);
+    var victoria = checkWin(tablero, jugador);
     if (victoria) derrota(victoria);
-
 }
 
-
 function checkWin(tablero, jugador) {
-    // Encontrar las posiciones ocupadas por el jugador
-    let jugadas = [];
-    for (let i = 0; i < tablero.length; i++) {
+    var jugadas = [];
+    for (var i = 0; i < tablero.length; i++) {
         if (tablero[i] === jugador) {
             jugadas.push(i);
         }
     }
 
-    // Verificar cada línea ganadora
-    for (let i = 0; i < lineas.length; i++) {
-        let linea = lineas[i];
-        let esGanador = true;
-        for (let j = 0; j < linea.length; j++) {
-            if (!jugadas.includes(linea[j])) {
+    for (var i = 0; i < lineas.length; i++) {
+        var linea = lineas[i];
+        var esGanador = true;
+        for (var j = 0; j < linea.length; j++) {
+            if (jugadas.indexOf(linea[j]) === -1) {
                 esGanador = false;
                 break;
             }
@@ -68,54 +69,75 @@ function checkWin(tablero, jugador) {
         }
     }
 
-    // Si no se encuentra una línea ganadora
     return null;
 }
-function derrota(victoria) {
-   
-    for (let index of lineas[victoria.index]) {
-        document.getElementById(index).style.backgroundColor =
-            victoria.jugador == jugadorUno ? "blue" : "red";
 
-    }
-    if ( jugadorUno == "blue") {
-        scoreJug++
-        console.log("jugador "+scoreJug);
+function derrota(victoria) {
+    var indices = lineas[victoria.index]; 
+    var color;
+
+    if (victoria.jugador == jugadorUno) {
+        color = "blue";
     } else {
-        scoreCpu++
-        console.log("Cpu "+scoreCpu)
+        color = "red";
+    }
+
+    for (var i = 0; i < indices.length; i++) {
+        var index = indices[i];
+        document.getElementById(index).style.backgroundColor = color;
+    }
+
+    if (victoria.jugador == jugadorUno) {
+        scoreJug++;
+        console.log("Jugador: " + scoreJug);
+    } else {
+        scoreCpu++;
+        console.log("CPU: " + scoreCpu);
     }
 
     for (var i = 0; i < celdas.length; i++) {
-        celdas[i].removeEventListener('Click', turnoClick, false);
+        celdas[i].removeEventListener('click', turnoClick);
     }
+
+    // Mostrar el resultado esto es solo para debuggear tengo que hacer una ventana que imprima estos datos jeje
+    declararGanador(victoria.jugador == jugadorUno ? "ganaste" : "te verguearon que pato");
 }
 
-
-
-function declararGanador(el) {
+function declararGanador(mensaje) {
     document.querySelector(".ventana").style.display = "block";
-    document.querySelector(".ventana.text").innerText = jugador;
-    alert(el);
+    document.querySelector(".ventana .text").innerText = mensaje;
 }
-
 
 function espacioVacio() {
-    return tablero.filter(s => typeof s == "number")
+    var espacios = [];
+    for (var i = 0; i < tablero.length; i++) {
+        if (typeof tablero[i] == "number") {
+            espacios.push(tablero[i]);
+            //necesito verificar cuantos numeros hay en la tabla para que el random pueda funcionar bien acordarse de crear la variable que vaya junto a los numeros en el tablero
+
+        }
+    }
+    console.log(espacios.length);//estoy debugueando los espacios preguntarle a nicol porque agrega un espacio de mas(prioridad)
+    return espacios;
 }
 
 function mejorCuadro() {
-    return espacioVacio()[0]
+    var vacios = espacioVacio();
+    return vacios[0];
+    // cambiar este metodo a un random o minimax si sobra tiempo
 }
 
 function revisarEmpate() {
     if (espacioVacio().length == 0) {
         for (var i = 0; i < celdas.length; i++) {
-            celdas[i].style.backgroundColor = "green"
-            celdas[i].removeEventListener("click", turnoClick, false);
+            celdas[i].style.backgroundColor = "green";
+            celdas[i].removeEventListener("click", turnoClick);
         }
-        alert("empate")
+        declararGanador("Empate");
+        empate++
+        console.log("empate: " + empate);
         return true;
+        
     }
-    return false
+    return false;
 }
