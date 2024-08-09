@@ -1,20 +1,29 @@
+
+article{
+    left: 0%;
+    right: 0%;
+    height: 4000px;
+    background-color: #9bd4c3;
+}
 section{
     display: flex;
     justify-content: center;
     align-items: center;
     left: 0%;
     right: 0%;
-    height: 500px;
-    background-color: rgba(137, 43, 226, 0);
+    height: 648px;
+    background-image: url("/assets/fondo.png");
+    background-size: cover;
 }
-table{
-    background-color: brown;
+.tablilla{
+    background-image: url("/assets/fondotablero.png");
+    background-size: cover;
 }
 
 
 
 td{
-    border: 2px solid #444;
+   
     height: 100px;
     width: 100px;
     text-align: center;
@@ -25,8 +34,33 @@ td{
 } 
 
 .ventana{
-    background-color: aqua;
-    left: 0%;
-    right: 0%;
-    height: 500px;
+    display: grid;
+    grid-template: 10% 75% 5% 10%/10% 80% 10%;
+    justify-items: center;
+    align-items: center;
+    background-image: url("/assets/fondoGane.png");
+    background-size: cover;
+    width: 565px;
+    height: 300px;
+    
+    
+    
+   
+}
+.text{
+    color: #aa7959;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 30px;
+    grid-row: 2;
+    grid-column: 2;
+}
+button{
+    grid-row: 3;
+    grid-column: 2;
+}
+.text2{
+    color: #aa7959;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 30px;
+
 }

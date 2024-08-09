@@ -32,6 +32,9 @@ function empezarLaVara() {
     }
 
     document.querySelector(".ventana .text").innerText = "";
+
+    document.querySelector(".ventana").style.display = "none";
+    document.querySelector(".tablilla").style.display = "block";
 }
 
 function turnoClick(cuadro) {
@@ -98,9 +101,11 @@ function derrota(victoria) {
 
     if (victoria.jugador == jugadorUno) {
         scores.scoreJug++;
+        document.querySelector(".tablilla").style.display = "none";
         console.log("Jugador: " + scores.scoreJug);
     } else {
         scores.scoreCpu++;
+        document.querySelector(".tablilla").style.display = "none";
         console.log("CPU: " + scores.scoreCpu);
     }
 
@@ -109,12 +114,14 @@ function derrota(victoria) {
     }
 
     guardarScore();
-    declararGanador(victoria.jugador == jugadorUno ? "¡Ganaste!" : "¡Te ganaron!");
+    declararGanador(victoria.jugador == jugadorUno ? "victorias "+scores.scoreJug : "perdiste "+scores.scoreCpu);
 }
 
 function declararGanador(mensaje) {
-    document.querySelector(".ventana").style.display = "block";
+    document.querySelector(".ventana").style.display = "grid";
     document.querySelector(".ventana .text").innerText = mensaje;
+    
+
 }
 
 function espacioVacio() {
@@ -140,6 +147,7 @@ function revisarEmpate() {
         }
         declararGanador("¡Empate!");
         scores.empate++;
+        document.querySelector(".tablilla").style.display = "none";
         guardarScore();
         return true;
     }
@@ -152,4 +160,8 @@ function guardarScore() {
 
 function getRandomInt(max) {
     return Math.floor(Math.random() * max);
+}
+function obtenerScore() {
+    const scoresString = localStorage.getItem('scores');
+    return scoresString ? JSON.parse(scoresString) : null;
 }
